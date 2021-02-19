@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "APU-FYP",
+    "name": "Orent",
     "slug": "APU-FYP",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -21,9 +21,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#fff"
+      },
+      "googleServicesFile": "./google-services.json",
+      "package":"apu.fyp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

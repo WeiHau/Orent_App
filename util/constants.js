@@ -1,0 +1,32 @@
+export const stateArray = [
+  "Johor",
+  "Kedah",
+  "Kelantan",
+  "Melaka",
+  "Negeri Sembilan",
+  "Pahang",
+  "Penang",
+  "Perak",
+  "Perlis",
+  "Sabah",
+  "Sarawak",
+  "Selangor",
+  "Terengganu",
+  "W.P. Kuala Lumpur",
+  "W.P. Labuan",
+  "W.P. Putrajaya",
+];
+
+export const categoryArray = [
+  "Books, Movies, Music & Games",
+  "DIY, Garden, & Hobby Supplies",
+  "Electronics",
+  "Fashion, Clothing & Accessories",
+  "Health & Beauty",
+  "Home & Furniture",
+  "Pets",
+  "Sports & Outdoor",
+  "Stationery",
+  "Technology",
+  "Toy & Baby",
+];
