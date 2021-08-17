@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : dataReducer.js
+// Description         : Global state (redux) initialization of information state
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import {
   SET_PARAMS,
   SET_POSTS,
@@ -18,6 +24,11 @@ import {
   LOADING_MESSAGE,
   SET_MESSAGE,
   MESSAGE_USER,
+  LOADING_RENTAL_REQUESTS,
+  LOADING_RENTAL_ACTIVITIES,
+  SET_RENTAL_REQUESTS,
+  SET_RENTAL_ACTIVITIES,
+  SET_REQUEST_APPROVAL,
 } from "../types";
 
 const initialState = {
@@ -29,6 +40,8 @@ const initialState = {
   message: { loading: true },
   userData: { loading: true },
   myPosts: { loading: true },
+  rentalRequests: { loading: true },
+  rentalActivities: { loading: true },
 };
 
 export default (state = initialState, action) => {
@@ -85,19 +98,7 @@ export default (state = initialState, action) => {
       );
       state.myPosts[index] = action.payload;
 
-      // set all posts side (not necessary)
-      // index = state.posts.findIndex(
-      //   (post) => post.postId === action.payload.postId
-      // );
-      // if (index !== -1) state.posts[index] = action.payload;
-
-      // if (state.post.postId === action.payload.postId) {
-      //   state.post = action.payload;
-      // }
-
-      return {
-        ...state,
-      };
+      return { ...state, myPosts: [...state.myPosts] };
     case ENABLE_DISABLE_POST:
       // set my posts side
       index = state.myPosts.findIndex(
@@ -109,12 +110,6 @@ export default (state = initialState, action) => {
         isAvailable: action.payload.enable,
       };
       state = { ...state, myPosts: [...state.myPosts] };
-      // setting all posts side is a little troublesome...
-      // (filtering makes enabling doesnt know whether or not to put the post)
-
-      // if (state.post.postId === action.payload.postId) {
-      //   state.post = action.payload;
-      // }
 
       return {
         ...state,
@@ -124,16 +119,8 @@ export default (state = initialState, action) => {
       index = state.myPosts.findIndex((post) => post.postId === action.payload);
       state.myPosts.splice(index, 1);
 
-      // set all posts side (not necessary)
-      // index = state.posts.findIndex((post) => post.postId === action.payload);
-      // if (index !== -1) state.posts.splice(index, 1);
-
-      return {
-        ...state,
-      };
+      return { ...state, myPosts: [...state.myPosts] };
     case POST_POST:
-      // setting all posts side is a little troublesome...
-      // (filtering makes it hard to know whether or not to put the post)
       return {
         ...state,
         myPosts: [
@@ -165,6 +152,36 @@ export default (state = initialState, action) => {
       return {
         ...state,
         messageUser: action.payload,
+      };
+    case LOADING_RENTAL_REQUESTS:
+      return {
+        ...state,
+        rentalRequests: { loading: true },
+      };
+    case LOADING_RENTAL_ACTIVITIES:
+      return {
+        ...state,
+        rentalActivities: { loading: true },
+      };
+    case SET_RENTAL_REQUESTS:
+      return {
+        ...state,
+        rentalRequests: action.payload,
+      };
+    case SET_RENTAL_ACTIVITIES:
+      return {
+        ...state,
+        rentalActivities: action.payload,
+      };
+    case SET_REQUEST_APPROVAL:
+      // remove it from requests
+      index = state.rentalRequests.findIndex(
+        (request) => request.requestId === action.payload
+      );
+      state.rentalRequests.splice(index, 1);
+      return {
+        ...state,
+        rentalRequests: [...state.rentalRequests],
       };
     case RESET_DATA:
       return initialState;

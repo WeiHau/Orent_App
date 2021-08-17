@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : post-components.js
+// Description         : The UI components for page 'post-post.js'
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 
@@ -71,7 +77,6 @@ const Category = (props) => {
   return (
     <Text
       onPress={() => {
-        //console.log("pressed " + props.category);
         store.dispatch({
           type: "SET_PARAMS",
           payload: { categories: [props.category] },
@@ -98,10 +103,7 @@ const Categories = (props) =>
 
 export const CategoriesSection = (props) =>
   props.categories && props.categories.length ? (
-    <PostDetailContainer
-      title="Categories"
-      //icon={<TagsIcon size={18} style={{ marginHorizontal: 5 }} />}
-    >
+    <PostDetailContainer title="Categories">
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
         <Categories categories={props.categories} />
       </View>
@@ -117,15 +119,7 @@ export const LocationSection = (props) => {
   );
 
   return (
-    <PostDetailContainer
-      title="Location"
-      // icon={
-      //   <LocationIcon
-      //     size={18}
-      //     style={{ marginHorizontal: 5, marginRight: 8 }}
-      //   />
-      // }
-    >
+    <PostDetailContainer title="Location">
       <LocationData
         viewStyles={{ marginBottom: 8 }}
         title="Address"
@@ -166,7 +160,7 @@ export const UserContactSection = (props) => {
       >
         <TouchableOpacity
           onPress={() => {
-            props.navigation.push("User", { handle: props.handle }); // replace
+            props.navigation.replace("User", { handle: props.handle }); // replace
           }}
         >
           <View style={{ alignItems: "center" }}>

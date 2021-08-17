@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : dataActions.js
+// Description         : Global state (redux) handling of information state
+// First Written on    : 20 December 2020
+// Last Edited on      : 03 March 2021
+
 import {
   SET_PARAMS,
   SET_POSTS,
@@ -20,22 +26,29 @@ import {
   LOADING_MESSAGE,
   SET_MESSAGE,
   MESSAGE_USER,
+  LOADING_RENTAL_REQUESTS,
+  SET_RENTAL_REQUESTS,
+  LOADING_RENTAL_ACTIVITIES,
+  SET_RENTAL_ACTIVITIES,
+  SET_REQUEST_APPROVAL,
 } from "../types";
 import axios from "axios";
 import store from "../store";
 
-export const getPosts = (params = null) => (dispatch) => {
-  dispatch({ type: LOADING_POSTS });
+export const getPosts =
+  (params = null) =>
+  (dispatch) => {
+    dispatch({ type: LOADING_POSTS });
 
-  axios
-    .get("/posts", { params })
-    .then((res) => {
-      dispatch({ type: SET_POSTS, payload: res.data });
-    })
-    .catch((err) => {
-      dispatch({ type: SET_POSTS, payload: [] });
-    });
-};
+    axios
+      .get("/posts", { params })
+      .then((res) => {
+        dispatch({ type: SET_POSTS, payload: res.data });
+      })
+      .catch((err) => {
+        dispatch({ type: SET_POSTS, payload: [] });
+      });
+  };
 
 export const setParams = (params) => (dispatch) => {
   dispatch({ type: SET_PARAMS, payload: params });
@@ -68,33 +81,38 @@ export const getMyPosts = () => (dispatch) => {
     });
 };
 
-export const editPost = (postId, editedPost, formData, navigation) => (
-  dispatch
-) => {
-  dispatch({ type: LOADING_UI });
+export const editPost =
+  (postId, editedPost, formData, navigation) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
 
-  const theFunc = () =>
-    axios
-      .post(`/post/${postId}`, editedPost)
-      .then((res) => {
-        dispatch({ type: EDIT_MY_POST, payload: res.data });
-        navigation.navigate("Home");
-        dispatch(clearErrors());
-      })
-      .catch((err) => {
-        dispatch({ type: SET_ERRORS, payload: err.response.data });
-      });
+    const { errors, valid } = validatePost(editedPost);
 
-  if (formData) {
-    axios.post("post/image", formData).then((data) => {
-      editedPost.image = data.data;
-      theFunc();
-    });
-  } else {
-    // user didnt change the post image
-    theFunc();
-  }
-};
+    const theFunc = () =>
+      axios
+        .post(`/post/${postId}`, editedPost)
+        .then((res) => {
+          dispatch({ type: EDIT_MY_POST, payload: res.data });
+          navigation.navigate("Home");
+          dispatch(clearErrors());
+        })
+        .catch((err) => {
+          dispatch({ type: SET_ERRORS, payload: err.response.data });
+        });
+
+    if (valid) {
+      if (formData) {
+        axios.post("post/image", formData).then((data) => {
+          editedPost.image = data.data;
+          theFunc();
+        });
+      } else {
+        // user didnt change the post image
+        theFunc();
+      }
+    } else {
+      dispatch({ type: SET_ERRORS, payload: errors });
+    }
+  };
 
 const isEmpty = (string) => {
   return string.trim() === "";
@@ -105,10 +123,12 @@ const validatePost = (postInfo) => {
   let { name, description, image, price } = postInfo;
 
   if (isEmpty(name)) errors.name = "Please complete this field";
+  else if (name.length > 50) errors.name = "Please enter a shorter title";
   if (isEmpty(description)) errors.description = "Please complete this field";
-  if (isEmpty(image)) errors.image = "Please upload an image";
-  if (isEmpty(price)) errors.price = "NaN";
+  if (isEmpty(image)) errors.image = "Please complete this field";
+  if (isEmpty(price)) errors.price = "Please complete this field";
   else if (isNaN(price)) errors.price = "NaN";
+  else if (parseInt(price) > 999999) errors.price = "Lower!";
 
   return { errors, valid: Object.keys(errors).length === 0 };
 };
@@ -167,7 +187,9 @@ export const deletePost = (postId, navigation) => (dispatch) => {
       navigation.navigate("Home");
       dispatch(clearErrors());
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      dispatch({ type: SET_ERRORS, payload: err.response.data });
+    });
 };
 
 export const getUserData = (userHandle) => (dispatch) => {
@@ -241,78 +263,81 @@ export const sendMessage = (sentMessage) => (dispatch) => {
 };
 
 // when user trying to write message to someone
-export const setMessage = (userHandle = null) => (dispatch) => {
-  dispatch({ type: LOADING_MESSAGE });
+export const setMessage =
+  (userHandle = null) =>
+  (dispatch) => {
+    dispatch({ type: LOADING_MESSAGE });
 
-  if (!userHandle) return;
+    if (!userHandle) return; // means user returns to previous page
 
-  // go thru the existing messages
-  const messages = store.getState().data.messages;
-  if (!Array.isArray(messages)) {
-    dispatch({ type: SET_MESSAGE, payload: null });
-    return;
-  }
+    // go thru the existing messages
+    const messages = store.getState().data.messages;
+    if (!Array.isArray(messages)) {
+      dispatch({ type: SET_MESSAGE, payload: null }); // to stop loading
+      return;
+    }
 
-  let handleIndex = messages.findIndex(
-    // messages is loading here (sometimes, when hotreload), causing error
-    (msg) => msg.user && msg.user.handle === userHandle
-  );
+    let handleIndex = messages.findIndex(
+      (msg) => msg.user && msg.user.handle === userHandle
+    );
 
-  if (handleIndex !== -1) {
-    // already have previous messages
+    if (handleIndex !== -1) {
+      // already have previous messages
+      let seenMessageCreatedAtsArray = [];
+      // read all messages of that user
+      for (let message of messages[handleIndex].messages) {
+        if (message.seen) break;
 
-    let seenMessageCreatedAtsArray = [];
-    // read all messages of that user
-    for (let message of messages[handleIndex].messages) {
-      if (message.seen) break;
-
-      if (!message.amSender) {
-        message.seen = true;
-        seenMessageCreatedAtsArray.push(message.createdAt);
+        if (!message.amSender) {
+          message.seen = true;
+          seenMessageCreatedAtsArray.push(message.createdAt);
+        }
       }
-    }
 
-    dispatch({ type: SET_MESSAGE, payload: messages[handleIndex] });
-    dispatch({ type: SET_MESSAGES, payload: [...messages] });
+      dispatch({ type: SET_MESSAGE, payload: { ...messages[handleIndex] } });
+      dispatch({ type: SET_MESSAGES, payload: [...messages] });
 
-    if (seenMessageCreatedAtsArray.length !== 0) {
-      axios.get(`/messages/${userHandle}/read`, {
-        params: { createdAts: seenMessageCreatedAtsArray },
-      });
-    }
-  } else {
-    // first message with this user
-    // fetch user image & fullName
-    axios
-      .get(`/user/${userHandle}`)
-      .then((res) => {
-        const userMessageObject = {
-          user: {
-            handle: userHandle,
-            imageUri: res.data.user.imageUrl,
-            fullName: res.data.user.fullName,
-          },
-          messages: [],
-        };
-
-        dispatch({
-          type: SET_MESSAGE,
-          payload: userMessageObject,
+      if (seenMessageCreatedAtsArray.length !== 0) {
+        axios.get(`/messages/${userHandle}/read`, {
+          params: { createdAts: seenMessageCreatedAtsArray },
         });
+      }
+    } else {
+      // first message with this user
+      // fetch user image & fullName
+      axios
+        .get(`/user/${userHandle}`)
+        .then((res) => {
+          if (!res.data.user.fullName) throw "User havent filled in data";
 
-        // add to state.messages
-        messages.push(userMessageObject);
-        dispatch({
-          type: SET_MESSAGES,
-          payload: [...messages],
+          const userMessageObject = {
+            user: {
+              handle: userHandle,
+              imageUri: res.data.user.imageUrl,
+              fullName: res.data.user.fullName,
+              expoPushToken: res.data.user.expoPushToken,
+            },
+            messages: [],
+          };
+
+          dispatch({
+            type: SET_MESSAGE,
+            payload: userMessageObject,
+          });
+
+          // add to state.messages
+          messages.unshift(userMessageObject);
+          dispatch({
+            type: SET_MESSAGES,
+            payload: [...messages],
+          });
+        })
+        .catch(() => {
+          console.log("an error occurred (SET_MESSAGE)");
+          dispatch({ type: SET_MESSAGE, payload: { error: true } });
         });
-      })
-      .catch(() => {
-        console.log("an error occurred (SET_MESSAGE)"); // user not found?
-        dispatch({ type: SET_MESSAGE, payload: { error: true } });
-      });
-  }
-};
+    }
+  };
 
 // when someone sent a message to user
 export const receiveMessage = (receivedMessage) => (dispatch) => {
@@ -350,7 +375,7 @@ export const receiveMessage = (receivedMessage) => (dispatch) => {
       });
     }
 
-    // shifting the element to first position
+    // shifting the userMessage to the first/top position
     let temp = messages.splice(handleIndex, 1);
     messages.unshift(temp[0]);
 
@@ -366,17 +391,19 @@ export const receiveMessage = (receivedMessage) => (dispatch) => {
         const userMessageObject = {
           user: {
             handle: receivedMessage.sender,
-            imageUri: res.data.imageUrl,
-            fullName: res.data.fullName,
+            imageUri: res.data.user.imageUrl,
+            fullName: res.data.user.fullName,
+            expoPushToken: res.data.user.expoPushToken,
           },
           messages: [newMessage],
         };
 
         // add to state.messages
-        messages.push(userMessageObject);
+        messages.unshift(userMessageObject);
+
         dispatch({
           type: SET_MESSAGES,
-          payload: messages,
+          payload: [...messages],
         });
 
         // user can't possibly be interacting with the user,
@@ -394,4 +421,70 @@ export const setMessageUser = (handle) => (dispatch) => {
 
 export const clearErrors = () => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
+};
+
+export const sendRentalRequest = (request) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .post("/rentalRequest", request)
+    .then((res) => {
+      dispatch(clearErrors());
+    })
+    .catch((err) => {
+      dispatch({ type: SET_ERRORS, payload: err.response.data });
+    });
+};
+
+export const getRentalRequests = () => (dispatch) => {
+  dispatch({ type: LOADING_RENTAL_REQUESTS });
+
+  axios
+    .get("/rentalRequests")
+    .then((res) => {
+      dispatch({ type: SET_RENTAL_REQUESTS, payload: res.data });
+    })
+    .catch((err) => {
+      // dispatch({ type: SET_ERRORS, payload: err.response.data });
+    });
+};
+
+export const getRentalActivities = () => (dispatch) => {
+  dispatch({ type: LOADING_RENTAL_ACTIVITIES });
+
+  axios
+    .get("/rentalActivities")
+    .then((res) => {
+      dispatch({ type: SET_RENTAL_ACTIVITIES, payload: res.data });
+    })
+    .catch((err) => {
+      // dispatch({ type: SET_ERRORS, payload: err.response.data });
+    });
+};
+
+export const approveRentalRequest = (requestId, approve) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  // remove it from requests
+
+  if (approve) {
+    axios
+      .get(`/rentalRequest/approve/${requestId}`)
+      .then((res) => {
+        dispatch({ type: SET_REQUEST_APPROVAL, payload: requestId });
+        dispatch(clearErrors());
+      })
+      .catch((err) => {
+        dispatch({ type: SET_ERRORS, payload: err.response.data });
+      });
+  } else {
+    axios
+      .get(`/rentalRequest/remove/${requestId}`)
+      .then((res) => {
+        dispatch({ type: SET_REQUEST_APPROVAL, payload: requestId });
+        dispatch(clearErrors());
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({ type: SET_ERRORS, payload: err.response.data });
+      });
+  }
 };

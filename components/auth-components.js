@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : auth-components.js
+// Description         : The UI components for page 'auth-login.js' and 'auth-signup.js'
+// First Written on    : 23 December 2020
+// Last Edited on      : 03 March 2021
+
 import React from "react";
 import { View, Text } from "react-native";
 

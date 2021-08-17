@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : mypost-components.js
+// Description         : The UI components for page 'mypost-addpost.js' and 'mypost-editpost.js'
+// First Written on    : 30 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useRef } from "react";
 import {
   View,

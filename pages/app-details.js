@@ -1,6 +1,11 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : app-details.js
+// Description         : The UI for complete user profile page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 
 // redux & api endpoint calling
 import { connect } from "react-redux";

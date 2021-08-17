@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : userActions.js
+// Description         : Global state (redux) handling of user state
+// First Written on    : 20 December 2020
+// Last Edited on      : 03 March 2021
+
 import {
   SET_USER,
   SET_AUTHENTICATED,
@@ -20,21 +26,18 @@ export const signupUser = (userData) => (dispatch) => {
   axios
     .post("signup", userData)
     .then((res) => {
-      console.log(`User ${userData.handle} signed up`);
-      //console.log(res.data.token);
-      setAuthorizationHeader(res.data.token);
+      // verification email sent
+      // show alert ("signed up successfully. please check your mailbox for email verification");
+      // ends here
 
-      // save credentials into securestore
-      const { email, password } = userData;
-      saveCredentials({ email, password });
-
-      dispatch(getUserData());
-      dispatch({ type: SET_AUTHENTICATED });
+      dispatch({
+        type: SET_USER,
+        payload: { verifyingEmail: true, authenticated: false },
+      });
       dispatch({ type: CLEAR_ERRORS });
     })
     .catch((err) => {
       dispatch({ type: SET_ERRORS, payload: err.response.data });
-      //console.log(err);
     });
 };
 
@@ -59,7 +62,6 @@ export const loginUser = (userData) => (dispatch) => {
     .catch((err) => {
       dispatch({ type: SET_ERRORS, payload: err.response.data });
       dispatch({ type: SET_UNAUTHENTICATED });
-      //console.log(err.response.data);
     });
 };
 
@@ -90,11 +92,17 @@ export const uploadImage = (formData) => (dispatch) => {
 
 export const logoutUser = () => (dispatch) => {
   // remove the axios header
+
+  axios.post("user/expoPushToken", { expoPushToken: null }).catch((err) => {
+    console.log("error");
+    console.log(err);
+  });
+
   delete axios.defaults.headers.common["Authorization"];
 
   try {
     SecureStore.deleteItemAsync("loginCredentials");
-    dispatch({ type: RESET_DATA }); // intruder: from data state loll
+    dispatch({ type: RESET_DATA });
     dispatch({ type: SET_UNAUTHENTICATED });
   } catch (e) {
     console.log(e);
@@ -108,14 +116,15 @@ export const getUserData = () => (dispatch) => {
   axios
     .get("user") // retrieve user details from db (middleware/fbAuth did the who-is-it job using the authtoken)
     .then((res) => {
-      //console.log("the response" + JSON.stringify(res.data));
       dispatch({ type: SET_USER, payload: res.data }); // then set the retrived data to state & stop loading
     })
     .catch((err) => console.log(err));
 };
 
 export const setExpoPushToken = (expoPushToken) => (dispatch) => {
+  // console.log(expoPushToken);
   axios.post("user/expoPushToken", { expoPushToken }).catch((err) => {
+    console.log("error");
     console.log(err);
   });
 };

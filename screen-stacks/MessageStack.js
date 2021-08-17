@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : MessageStack.js
+// Description         : React navigaton - messages stack screens
+// First Written on    : 30 January 2021
+// Last Edited on      : 03 March 2021
+
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 

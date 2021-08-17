@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : post-model.js
+// Description         : util - all often used UI components on displaying posts
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useEffect, useRef } from "react";
 import {
   View,
@@ -5,7 +11,6 @@ import {
   ImageBackground,
   Switch,
   Animated,
-  Image,
   Dimensions,
 } from "react-native";
 
@@ -22,11 +27,6 @@ const UnavailableModal = (props) => {
       friction: 7,
       tension: 60,
       useNativeDriver: true,
-      //bounciness: 8,
-      //speed:16
-      // damping: 10,
-      // stiffness: 80,
-      // mass: 1,
     }).start();
 
     return () => {
@@ -35,11 +35,6 @@ const UnavailableModal = (props) => {
         friction: 7,
         tension: 60,
         useNativeDriver: true,
-        //bounciness: 8,
-        //speed:16
-        // damping: 10,
-        // stiffness: 80,
-        // mass: 1,
       }).start();
     };
   }, []);
@@ -212,13 +207,11 @@ export const HorizontalPost2 = (props) => {
           : props.width, //45
         marginLeft: 3.5,
         marginRight: 3.5,
-        //height: 220,
         backgroundColor: "#fff",
         marginBottom: 10,
         elevation: 3,
         borderRadius: 2,
         overflow: "hidden",
-        //justifyContent: "space-between",
       }}
     >
       <ImageBackground
@@ -231,6 +224,7 @@ export const HorizontalPost2 = (props) => {
             alignSelf: "flex-end",
             backgroundColor: "rgba(255,255,255, .7)",
           }}
+          numberOfLines={1}
         >
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>{price}</Text>
           <Text style={{ color: "#555", fontSize: 10 }}> RM/day</Text>
@@ -248,7 +242,6 @@ export const HorizontalPost2 = (props) => {
         <Text style={{}} numberOfLines={2}>
           {name}
         </Text>
-        {/* <Text style={{ marginBottom: 4 }}>{description}</Text> */}
         <View
           style={{
             flexDirection: "row",
@@ -262,110 +255,6 @@ export const HorizontalPost2 = (props) => {
           >{`${postcode}, ${city}`}</Text>
         </View>
       </View>
-    </View>
-  );
-
-  return (
-    <View
-      style={{
-        backgroundColor: "#fff",
-        elevation: 3,
-        width: "100%",
-        height: 140,
-        borderRadius: 4,
-        overflow: "hidden",
-        marginBottom: 15,
-      }}
-    >
-      <ImageBackground
-        style={{ flex: 1 }}
-        imageStyle={{ width: "40%", resizeMode: "cover" }}
-        source={{
-          uri: image,
-        }}
-      >
-        <View
-          style={{
-            marginLeft: "40%",
-            flex: 1,
-            padding: 8,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
-              numberOfLines={1}
-              style={{
-                fontWeight: "bold",
-                fontSize: 18,
-                paddingRight: 8,
-                borderColor: "#888",
-                color: "#222",
-              }}
-            >
-              {name}
-            </Text>
-          </View>
-          <Text
-            style={{
-              color: "#888",
-              fontSize: 12,
-              marginBottom: 8,
-            }}
-            numberOfLines={2}
-          >
-            {description}
-          </Text>
-          {categories && !!categories.length && (
-            <View
-              style={{
-                //flex: 1,
-                flexDirection: "row",
-                alignItems: "center",
-                paddingRight: 8,
-              }}
-            >
-              <TagsIcon size={12} style={{ color: "#888", marginRight: 2 }} />
-              <Text
-                numberOfLines={1}
-                style={{
-                  color: "#888",
-                  fontSize: 12,
-                  marginBottom: 5,
-                }}
-              >
-                {categories.join(", ")}
-              </Text>
-            </View>
-          )}
-
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "space-between",
-              alignItems: "flex-end",
-              flexDirection: "row",
-            }}
-          >
-            <Text
-              style={{
-                color: "#888",
-                fontSize: 10,
-              }}
-            >
-              {dayjs(createdAt).format("DD/MM/YY")}
-            </Text>
-            <Text style={{ paddingLeft: 8 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}>{price}</Text>
-              <Text style={{ color: "#888", fontSize: 12 }}> RM/day</Text>
-            </Text>
-          </View>
-        </View>
-      </ImageBackground>
     </View>
   );
 };

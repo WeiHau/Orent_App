@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : profile-component.js
+// Description         : The UI components for page 'profile-home.js'
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 

@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : PostStack.js
+// Description         : React navigaton - all post stack screens
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React from "react";
 import {
   createStackNavigator,

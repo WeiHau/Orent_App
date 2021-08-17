@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : mypost-home.js
+// Description         : The UI for myposts page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useEffect } from "react";
 import {
   View,
@@ -28,7 +34,11 @@ const MyPosts = (props) => {
   let data = props.myPosts;
 
   if (!data || data.length === 0) {
-    return <Text>No post yet</Text>;
+    return (
+      <View style={{ margin: 50, flex: 1, alignItems: "center" }}>
+        <Text style={{ fontSize: 16, color: "#888" }}>No post yet...</Text>
+      </View>
+    );
   }
 
   const renderItem = ({ item }) => (
@@ -58,7 +68,7 @@ const MyPosts = (props) => {
           onRefresh={() => props.getMyPosts()}
         />
       }
-      data={data}
+      data={data.loading ? [] : data}
       renderItem={renderItem}
       keyExtractor={(item) => item.postId}
     />

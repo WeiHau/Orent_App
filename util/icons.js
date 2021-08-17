@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : icons.js
+// Description         : util - all often used icons
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React from "react";
 
 // icons
@@ -132,4 +138,8 @@ export const SendIcon = (props) => (
 
 export const MessageIcon = (props) => (
   <AntDesign name="message1" size={24} {...props} />
+);
+
+export const CheckIcon = (props) => (
+  <AntDesign name="check" size={24} {...props} />
 );

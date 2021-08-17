@@ -1,9 +1,15 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : auth-login.js
+// Description         : The UI for login page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 
 // redux & api endpoint calling
 import { connect } from "react-redux";
-import { loginUser, clearErrors } from "../redux/actions/userActions";
+import { loginUser } from "../redux/actions/userActions";
 
 // icons
 import { EmailIcon, LockIcon } from "../util/icons";
@@ -13,8 +19,6 @@ import { LoginTitle, SignUpText } from "../components/auth-components";
 import { MyTextInput, MyButton } from "../util/my-form-elements";
 import { ScreenContainer } from "../util/containers";
 import ScreenLoadingModal from "../util/ScreenLoadingModal";
-
-//#fbb124
 
 const Decoration = (props) => (
   <View style={{ alignItems: "flex-end" }}>
@@ -68,7 +72,7 @@ const login = (props) => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
 
-  const login = () => {
+  const onPressLogin = () => {
     props.loginUser({ email, password });
   };
 
@@ -157,7 +161,7 @@ const login = (props) => {
               alignItems: "flex-end",
             }}
           >
-            <MyButton onPress={login} style={{ width: "40%" }}>
+            <MyButton onPress={onPressLogin} style={{ width: "40%" }}>
               <Text style={{ color: "#fff" }}>LOGIN</Text>
             </MyButton>
           </View>
@@ -175,7 +179,6 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
   loginUser,
-  clearErrors,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(login);

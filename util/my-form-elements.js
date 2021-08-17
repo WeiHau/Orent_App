@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : my-form-elements.js
+// Description         : util - all often used UI components on forms (textfields, buttons, etc.)
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useRef } from "react";
 import {
   View,
@@ -208,7 +214,7 @@ export const MyButton3 = (props) => (
         height: 50,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f45c57",
+        backgroundColor: props.positive ? "#3eb489" : "#f45c57",
       }}
     >
       {props.children}

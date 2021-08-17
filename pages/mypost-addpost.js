@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : mypost-addpost.js
+// Description         : The UI for adding post page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 
@@ -7,12 +13,7 @@ import { postPost, clearErrors } from "../redux/actions/dataActions";
 
 // util/components
 import { ScreenContainer } from "../util/containers";
-import {
-  MyTextInput,
-  MyTextArea,
-  MyButton,
-  MyButton2,
-} from "../util/my-form-elements";
+import { MyTextInput, MyTextArea, MyButton2 } from "../util/my-form-elements";
 import {
   AddPostTitle,
   ItemImage,
@@ -51,11 +52,8 @@ const addpost = (props) => {
   useEffect(() => {
     if (props.UI.errors) {
       setErrors(props.UI.errors);
-      //console.log("receive errors:" + JSON.stringify(props.UI.errors));
     }
   }, [props.UI.errors]);
-
-  // createdAt, isAvailable, item (categories, desc, img, name, price), postId
 
   return (
     <ScreenContainer>

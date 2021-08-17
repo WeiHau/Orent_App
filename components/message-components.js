@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : message-components.js
+// Description         : The UI components for page 'message-home.js' and 'message-chat.js'
+// First Written on    : 15 January 2020
+// Last Edited on      : 03 March 2021
+
 import React from "react";
 import {
   Modal,
@@ -119,8 +125,6 @@ export const UserMessage = ({ item, navigation }) => {
             paddingHorizontal: "3%",
             borderLeftWidth: 0.5,
             borderColor: "#aaa",
-            // justifyContent: "space-evenly",
-            // backgroundColor: "red",
           }}
         >
           <View
@@ -189,7 +193,6 @@ export const UserMessage = ({ item, navigation }) => {
 
 // message/chat components
 import { BackIcon2 } from "../util/icons";
-import store from "../redux/store";
 
 const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 20 : StatusBar.currentHeight;
 export const ChatHeader = (props) => {
@@ -214,7 +217,7 @@ export const ChatHeader = (props) => {
       }}
     >
       <TouchableOpacity
-        onPress={() => props.navigation.goBack()}
+        onPress={() => props.navigation.popToTop()}
         style={{ marginLeft: 5 }}
       >
         <View
@@ -229,10 +232,6 @@ export const ChatHeader = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          store.dispatch({
-            type: "SET_USER_DATA",
-            payload: { changeUser: user.handle },
-          });
           props.navigation.navigate("App", {
             screen: "Home",
             params: {

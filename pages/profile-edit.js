@@ -1,6 +1,11 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : profile-edit.js
+// Description         : The UI for edit profile page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import { View, Text, Alert } from "react-native";
 
 // redux & api endpoint calling
 import { connect } from "react-redux";
@@ -9,6 +14,7 @@ import {
   logoutUser,
   clearErrors,
 } from "../redux/actions/userActions";
+import store from "../redux/store";
 
 // components/util
 import {
@@ -18,7 +24,6 @@ import {
 } from "../components/profile-form-components";
 import {
   MyTextInput,
-  MyButton,
   MyButton2,
   MyPicker,
   MyTextArea,
@@ -105,6 +110,8 @@ const details = (props) => {
       // Screen was focused
       // clear errors
       setErrors({});
+      // clear redux errors
+      store.dispatch({ type: "CLEAR_ERRORS" });
     });
 
     return unsubscribe;
@@ -113,8 +120,15 @@ const details = (props) => {
   // catch errors
   useEffect(() => {
     if (props.UI.errors) {
-      setErrors(props.UI.errors);
-      console.log("receive errors:" + JSON.stringify(props.UI.errors));
+      if (props.UI.errors.action) {
+        Alert.alert(
+          `Profile is ${props.UI.errors.action}.`,
+          "You account is currently associated to one of the rental activities/requests. \n\nPlease reject all the requests, or wait until all the activities are removed."
+        );
+      } else {
+        setErrors(props.UI.errors);
+        console.log("receive errors:" + JSON.stringify(props.UI.errors));
+      }
     }
   }, [props.UI.errors]);
 

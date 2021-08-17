@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : AppStack.js
+// Description         : React navigaton - application stack
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 

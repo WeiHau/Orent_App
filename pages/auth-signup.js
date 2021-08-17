@@ -1,9 +1,15 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : auth-signup.js
+// Description         : The UI for signup page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 
 // redux & api endpoint calling
 import { connect } from "react-redux";
-import { signupUser, clearErrors } from "../redux/actions/userActions";
+import { signupUser } from "../redux/actions/userActions";
 
 // components/util
 import { SignUpTitle, LoginText } from "../components/auth-components";
@@ -87,6 +93,16 @@ const signup = (props) => {
   }, [props.UI.errors]);
 
   useEffect(() => {
+    if (props.user.verifyingEmail) {
+      Alert.alert(
+        "Registration Success",
+        "Please check your mailbox for email verification before login"
+      );
+      props.navigation.navigate("Login");
+    }
+  }, [props.user]);
+
+  useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       // Screen was focused
       // clear everything
@@ -116,7 +132,7 @@ const signup = (props) => {
           <SignUpTitle />
           <View>
             <MyTextInput
-              placeholder="USER HANDLE"
+              placeholder="USER HANDLE (ID)"
               value={handle}
               onChangeText={(e) => setHandle(e)}
               error={errors.handle}
@@ -180,11 +196,11 @@ const signup = (props) => {
 
 const mapStateToProps = (state) => ({
   UI: state.UI,
+  user: state.user,
 });
 
 const mapActionsToProps = {
   signupUser,
-  clearErrors,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(signup);

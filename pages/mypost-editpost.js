@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : mypost-editpost.js
+// Description         : The UI for edit post page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useEffect } from "react";
 import { View, Text, Alert } from "react-native";
 
@@ -8,6 +14,7 @@ import {
   deletePost,
   clearErrors,
 } from "../redux/actions/dataActions";
+import store from "../redux/store";
 
 // util/components
 import { ScreenContainer } from "../util/containers";
@@ -76,13 +83,22 @@ const editpost = (props) => {
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
       setErrors({});
+      store.dispatch({ type: "CLEAR_ERRORS" });
     });
     return unsubscribe;
   }, [props.navigation]);
+
   useEffect(() => {
     if (props.UI.errors) {
-      setErrors(props.UI.errors);
-      console.log("receive errors:" + JSON.stringify(props.UI.errors));
+      if (props.UI.errors.action) {
+        Alert.alert(
+          `Post is ${props.UI.errors.action}.`,
+          "The post is associated to one of the rental activities/requests. \n\nPlease reject the request(s), or wait until the activity(s) is removed."
+        );
+      } else {
+        setErrors(props.UI.errors);
+        console.log("receive errors:" + JSON.stringify(props.UI.errors));
+      }
     }
   }, [props.UI.errors]);
 

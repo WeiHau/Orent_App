@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : posts-components.js
+// Description         : The UI components for page 'post-posts.js'
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useRef } from "react";
 import {
   View,
@@ -159,31 +165,11 @@ export const FilterForm = (props) => {
     props.hideExpanded(params);
   };
 
-  // let panResponder = useRef(PanResponder.create({
-  //         onStartShouldSetPanResponder: () => true,
-  //         onPanResponderMove: (event, gestureState) => {
-  //           console.log("sdf");
-  //           console.log("asdflakj");
-  //           translateValue.setValue(Math.max(0, 0 + gestureState.dy)); //step 1
-  //         },
-  //         onPanResponderRelease: (e, gesture) => {
-
-  //           // const shouldOpen = gesture.vy <= 0;
-  //           // Animated.spring(this.state.translateValue, {
-  //           //   toValue: shouldOpen ? 0 : 200,
-  //           //   velocity: gesture.vy,
-  //           //   tension: 2,
-  //           //   friction: 8,
-  //           //   useNativeDriver: true,
-  //           // }).start(); //step 2
-  //         },
-  //       })).current;
-
   return (
     <>
       <View
         style={{
-          height: props.filterFormHeight,
+          // height: props.filterFormHeight,
           //position: "absolute",
           width: "100%",
           top: 0,
@@ -244,6 +230,7 @@ export const FilterForm = (props) => {
             backgroundColor: "#eee",
             width: "100%",
             alignItems: "center",
+            marginTop: 10,
           }}
           onPress={() => {
             props.hideExpanded();
@@ -334,37 +321,3 @@ export const NoPostView = (props) => (
     </Text>
   </View>
 );
-
-// App > Home > My Posts > AddPost
-// navigation.navigate('Root', {
-//   screen: 'Settings',
-//   params: {
-//     screen: 'Sound',
-//     params: {
-//       screen: 'Media',
-//     },
-//   },
-// });
-
-//
-//   constructor(props) {
-//     super(props);
-//     this.panResponder = PanResponder.create({
-//       onStartShouldSetPanResponder: () => true,
-//       onPanResponderMove: (event, gestureState) => {
-//         console.log("sdf");
-//         console.log("asdflakj");
-//         this.state.translateValue.setValue(Math.max(0, 0 + gestureState.dy)); //step 1
-//       },
-//       onPanResponderRelease: (e, gesture) => {
-//         const shouldOpen = gesture.vy <= 0;
-//         Animated.spring(this.state.translateValue, {
-//           toValue: shouldOpen ? 0 : 200,
-//           velocity: gesture.vy,
-//           tension: 2,
-//           friction: 8,
-//           useNativeDriver: true,
-//         }).start(); //step 2
-//       },
-//     });
-//   }

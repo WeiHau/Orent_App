@@ -1,4 +1,10 @@
-import React, { useEffect } from "react";
+// Programmer Name     : Lim Wei Hau
+// Program Name        : profile-home.js
+// Description         : The UI for profile page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
+import React from "react";
 import { View, Text } from "react-native";
 
 // redux/userAction

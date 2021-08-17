@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : SocketProvider.js
+// Description         : util - a React Context to allow all components to access socket at any file
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { AppState } from "react-native";
 import io from "socket.io-client";
@@ -10,8 +16,6 @@ const SocketContext = React.createContext();
 
 export const useSocket = () => useContext(SocketContext);
 
-//https://www.youtube.com/watch?v=tBr-PybP_9c
-//https://github.com/WebDevSimplified/Whatsapp-Clone/tree/master/client/src/contexts
 const SocketProvide = (props) => {
   const [socket, setSocket] = useState();
   let socketR = useRef(null).current; // to use this inside functions
@@ -31,6 +35,7 @@ const SocketProvide = (props) => {
 
   const initializeSocket = () => {
     const newSocket = io("http://192.168.0.168:5000");
+    // const newSocket = io("https://apu-fyp-api.herokuapp.com");
 
     newSocket.on("connect", (data) => {
       // sending user handle to socket io
@@ -44,7 +49,6 @@ const SocketProvide = (props) => {
 
     newSocket.on("receive-message", (message) => {
       // store/add into state (probably redux)
-      // console.log("received message: " + JSON.stringify(message));
 
       // user = sender
       if (message.sender === handle) return;

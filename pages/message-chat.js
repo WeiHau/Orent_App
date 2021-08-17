@@ -1,10 +1,14 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : message-chat.js
+// Description         : The UI for chatting page
+// First Written on    : 10 January 2021
+// Last Edited on      : 03 March 2021
+
 import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
   FlatList,
-  Button,
-  RefreshControl,
   Alert,
   TextInput,
   TouchableOpacity,
@@ -22,24 +26,78 @@ import { ChatHeader } from "../components/message-components";
 import { SendIcon } from "../util/icons";
 import ScreenLoadingModal from "../util/ScreenLoadingModal";
 
+import dayjs from "dayjs";
+
 const Messages = (props) => {
   let data = props.message;
 
-  if (!data || !data.messages || data.messages.length === 0) data = [];
+  if (!data || !data.messages) data.messages = [];
 
-  const renderItem = ({ item }) => {
+  const flatlistRef = useRef();
+
+  const renderItem = ({ item, index }) => {
+    let displayTimeStamp = true;
+    let sameSender = true;
+    // if message isn't the top message
+    if (index !== data.messages.length - 1) {
+      // previous chat item
+      let prevMessage = data.messages[index + 1];
+
+      displayTimeStamp = !dayjs(prevMessage.createdAt).isSame(
+        item.createdAt,
+        "day"
+      );
+      sameSender = prevMessage.amSender === item.amSender;
+    }
+
     return (
-      <View style={{ marginBottom: 4, width: "100%" }}>
+      <View
+        style={{
+          marginTop: sameSender ? 2 : 8,
+          marginBottom: !index ? 5 : 0,
+          width: "100%",
+        }}
+      >
+        {displayTimeStamp && (
+          <View
+            style={{
+              alignSelf: "center",
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              elevation: 1,
+              borderRadius: 15,
+              marginVertical: 10,
+              // backgroundColor: "#defade",
+              backgroundColor: "#deeff5",
+            }}
+          >
+            <Text style={{ color: "#555", textTransform: "uppercase" }}>
+              {dayjs(item.createdAt).format("D MMMM YYYY")}
+            </Text>
+          </View>
+        )}
         <View
           style={{
-            padding: 10,
-            marginHorizontal: 8,
-            backgroundColor: item.amSender ? "#fccf3f" : "#fff",
-            borderRadius: 5,
+            paddingHorizontal: 10,
+            paddingVertical: 6,
+            maxWidth: "80%",
+            marginHorizontal: 10,
+            backgroundColor: item.amSender ? "#feddb6" : "#fff",
+            borderRadius: 8,
             alignSelf: item.amSender ? "flex-end" : "flex-start",
           }}
         >
           <Text style={{ fontSize: 14 }}>{item.content}</Text>
+          <Text
+            style={{
+              fontSize: 10,
+              marginTop: 2,
+              color: "#777",
+              textAlign: "right",
+            }}
+          >
+            {dayjs(item.createdAt).format("h:mm a")}
+          </Text>
         </View>
       </View>
     );
@@ -47,7 +105,12 @@ const Messages = (props) => {
 
   return (
     <FlatList
-      style={{ marginTop: 65 }}
+      ref={flatlistRef}
+      onContentSizeChange={() => {
+        if (!data.messages.length) return;
+        flatlistRef.current.scrollToIndex({ index: 0, animated: true });
+      }}
+      style={{ marginTop: 60 }}
       data={data.messages}
       renderItem={renderItem}
       keyExtractor={(item, index) => index + ""}
@@ -77,11 +140,9 @@ const InputField = (props) => {
         style={{
           height: "100%",
           backgroundColor: "#fbb124",
-          // borderRadius: 25,
           padding: 14,
           paddingRight: 17,
           alignItems: "center",
-          // justifyContent: "center",
         }}
       >
         <SendIcon style={{ color: "#fff", alignSelf: "center" }} />
@@ -95,7 +156,6 @@ const chat = (props) => {
 
   useEffect(() => {
     props.setMessage(handle);
-
     return () => {
       props.setMessage();
     };
@@ -130,7 +190,9 @@ const chat = (props) => {
 
     const messageObj = {
       sender: props.userHandle,
+      senderFullName: props.userFullName,
       recipient: handle,
+      recipientPushToken: props.message.user.expoPushToken,
       content: draft,
       createdAt: new Date().toISOString(),
       seen: false,
@@ -153,6 +215,7 @@ const chat = (props) => {
 const mapStateToProps = (state) => ({
   message: state.data.message,
   userHandle: state.user.credentials.handle,
+  userFullName: state.user.credentials.fullName,
 });
 
 const mapActionsToProps = {

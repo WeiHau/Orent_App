@@ -1,12 +1,19 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : message-home.js
+// Description         : The UI for messages page
+// First Written on    : 10 January 2021
+// Last Edited on      : 03 March 2021
+
 import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
   FlatList,
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
+
+import * as Notifications from "expo-notifications";
 
 // redux
 import { connect } from "react-redux";
@@ -27,10 +34,14 @@ import { PlusIcon, BackIcon, MessageIcon } from "../util/icons";
 const UserMessages = (props) => {
   let data = props.messages;
 
-  if (!data) return null;
+  if (!data) data = [];
 
   if (data && data.length === 0) {
-    return <Text>No message yet...</Text>;
+    return (
+      <View style={{ margin: 50, flex: 1, alignItems: "center" }}>
+        <Text style={{ fontSize: 16, color: "#888" }}>No message yet...</Text>
+      </View>
+    );
   }
 
   const renderItem = ({ item }) => (
@@ -45,7 +56,7 @@ const UserMessages = (props) => {
           onRefresh={() => props.getMessages()}
         />
       }
-      data={data}
+      data={data.loading ? [] : data}
       renderItem={renderItem}
       keyExtractor={(item, index) => index + ""}
     />
@@ -59,10 +70,21 @@ const home = (props) => {
 
   useEffect(() => {
     if (!props.messages.loading && props.messageUser) {
+      console.log("messageUser: " + props.messageUser);
       props.navigation.navigate("Chat", { handle: props.messageUser });
       props.setMessageUser(null);
     }
   }, [props.messages, props.messageUser]);
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      // Screen was focused
+      // clear notifications
+      Notifications.dismissAllNotificationsAsync();
+    });
+
+    return unsubscribe;
+  }, [props.navigation]);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [userHandle, setUserHandle] = useState("");
@@ -78,7 +100,7 @@ const home = (props) => {
         <View style={{ padding: "8%" }}>
           <Text>New message to...</Text>
           <MyTextInput
-            placeholder="Enter user handle"
+            placeholder="Enter recipient user handle"
             value={userHandle}
             onChangeText={(e) => setUserHandle(e)}
           />

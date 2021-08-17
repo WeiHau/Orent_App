@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : types.js
+// Description         : Global state (redux) all types of redux actions
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 // User reducer types
 export const SET_AUTHENTICATED = "SET_AUTHENTICATED";
 export const SET_UNAUTHENTICATED = "SET_UNAUTHENTICATED";
@@ -26,6 +32,11 @@ export const ENABLE_DISABLE_POST = "ENABLE_DISABLE_POST";
 export const POST_POST = "POST_POST";
 export const DELETE_POST = "DELETE_POST";
 export const RESET_DATA = "RESET_DATA";
+export const LOADING_RENTAL_REQUESTS = "LOADING_RENTAL_REQUESTS";
+export const LOADING_RENTAL_ACTIVITIES = "LOADING_RENTAL_ACTIVITIES";
+export const SET_RENTAL_REQUESTS = "SET_RENTAL_REQUESTS";
+export const SET_RENTAL_ACTIVITIES = "SET_RENTAL_ACTIVITIES";
+export const SET_REQUEST_APPROVAL = "SET_REQUEST_APPROVAL";
 
 // Messages
 export const LOADING_MESSAGES = "LOADING_MESSAGES";

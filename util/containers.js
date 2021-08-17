@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : containers.js
+// Description         : util - all often used UI containers
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useRef } from "react";
 import {
   View,
@@ -182,7 +188,7 @@ export const AnimatedHeaderContainer = (props) => {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.popToTop()}>
           <Animated.View
             style={{
               backgroundColor: animationValue.interpolate({

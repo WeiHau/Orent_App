@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : constants.js
+// Description         : util - all the essentail constants
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 export const stateArray = [
   "Johor",
   "Kedah",

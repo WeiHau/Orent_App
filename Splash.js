@@ -1,5 +1,10 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : Splash.js
+// Description         : React component page - wait for splash screen if there are credential stored if not redirect to login page directly
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
 
 // redux & api endpoint calling
 import { connect } from "react-redux";
@@ -22,7 +27,6 @@ const Splash = (props) => {
   const readSecureStore = async () => {
     try {
       const credentials = await SecureStore.getItemAsync("loginCredentials");
-      // console.log("value of credentials: ", credentials);
 
       if (credentials) {
         const user = JSON.parse(credentials);

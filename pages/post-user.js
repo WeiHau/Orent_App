@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : post-user.js
+// Description         : The UI for other user profile page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useEffect, useRef } from "react";
 import {
   RefreshControl,
@@ -22,22 +28,19 @@ import {
   ContactsSection,
 } from "../components/profile-component";
 
-import { useNavigation } from "@react-navigation/native";
-
 import dayjs from "dayjs";
 
 import { ItemIcon } from "../util/icons";
 
 const UserData = (props) => {
   const { userData, postNo, posts } = props;
-  const navigation = useNavigation();
 
   if (!userData) return null;
 
   const renderItem = ({ item }) => (
     <TouchableWithoutFeedback
       onPress={() => {
-        props.navigation.push("Post", {
+        props.navigation.replace("Post", {
           // replace or push??
           postId: item.postId,
           name: item.item.name,
@@ -155,13 +158,19 @@ const UserData = (props) => {
         <ItemIcon size={16} color="#666" style={{ paddingRight: 8 }} />
         <Text style={{ color: "#666", fontSize: 16 }}>Posts</Text>
       </View>
-      <FlatList
-        contentContainerStyle={{ paddingHorizontal: 8, marginBottom: 10 }}
-        data={posts}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.postId}
-        horizontal
-      />
+      {posts && posts.length === 0 ? (
+        <View style={{ margin: 0, flex: 1, alignItems: "center" }}>
+          <Text style={{ fontSize: 16, color: "#888" }}>No post yet...</Text>
+        </View>
+      ) : (
+        <FlatList
+          contentContainerStyle={{ paddingHorizontal: 8, marginBottom: 10 }}
+          data={posts ? posts : []}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.postId}
+          horizontal
+        />
+      )}
     </FlatListContainer>
   );
 };
@@ -170,19 +179,9 @@ const user = (props) => {
   let handle = useRef(props.route.params.handle);
 
   useEffect(() => {
+    handle.current = props.route.params.handle;
     props.getUserData(handle.current);
   }, [props.route.params.handle]);
-
-  // switch user (trigger reload)
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", () => {
-      // Screen was focused
-      if (props.userData.changeUser)
-        props.getUserData(props.userData.changeUser);
-    });
-
-    return unsubscribe;
-  }, [props.navigation, props.userData]);
 
   return (
     <AnimatedHeaderContainer
@@ -204,35 +203,6 @@ const user = (props) => {
       />
     </AnimatedHeaderContainer>
   );
-
-  // return (
-  //   <AnimatedHeaderContainer
-  //     navigation={props.navigation}
-  //     title={`@${props.route.params.handle}`}
-  //     refreshControl={
-  //       <RefreshControl
-  //         progressViewOffset={90}
-  //         refreshing={props.userData.loading}
-  //         onRefresh={() => props.getUserData(handle.current)}
-  //       />
-  //     }
-  //     ListHeaderComponent={
-  //       <UserData
-  //         userData={props.userData.user}
-  //         postNo={props.userData.posts ? props.userData.posts.length : 0}
-  //         navigation={props.navigation}
-  //       />
-  //     }
-  //     data={props.userData.loading ? [] : props.userData.posts}
-  //     renderItem={renderItem}
-  //     keyExtractor={(item) => item.postId}
-  //     contentContainerStyle={{
-  //       paddingHorizontal: "3%",
-  //       backgroundColor: "#fff",
-  //     }}
-  //     flatlist // TODO: remove the flatlist, contain the flatlist with a scrollview and do the job OR use horizontal again
-  //   />
-  // );
 };
 
 const mapStateToProps = (state) => ({

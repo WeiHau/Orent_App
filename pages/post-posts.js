@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : post-posts.js
+// Description         : The UI for all posts page
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -23,7 +29,6 @@ import {
   ClearFilterButton,
   NoPostView,
 } from "../components/posts-components";
-import ScreenLoadingModal from "../util/ScreenLoadingModal";
 
 const Posts = (props) => {
   let data = props.posts;

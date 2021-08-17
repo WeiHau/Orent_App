@@ -1,3 +1,9 @@
+// Programmer Name     : Lim Wei Hau
+// Program Name        : functions.js
+// Description         : util - all often used functions
+// First Written on    : 25 December 2020
+// Last Edited on      : 03 March 2021
+
 const states = [
   { name: "Perlis", postcodes: "01000 - 02800" },
   { name: "Kedah", postcodes: "05000 - 09810" },
@@ -66,9 +72,11 @@ import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { Alert } from "react-native";
 
-const requestCameraRollPermission = async () => {
+const requestPermission = async (imagePickerType) => {
   if (Platform.OS !== "web") {
-    const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+    const { status } = imagePickerType
+      ? await ImagePicker.requestMediaLibraryPermissionsAsync()
+      : await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
       alert("Sorry, we need camera roll permissions to make this work!");
       return false;
@@ -100,7 +108,7 @@ export const pickImage = (setImageUri) => {
 };
 
 const pickImageAsync = async (setImageUri, imagePickerType) => {
-  if (!(await requestCameraRollPermission())) return;
+  if (!(await requestPermission(imagePickerType))) return;
 
   let result = imagePickerType
     ? await ImagePicker.launchImageLibraryAsync({
